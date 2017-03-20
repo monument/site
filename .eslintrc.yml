@@ -1,0 +1,23 @@
+extends: eslint:recommended
+
+env:
+    node: true
+    es6: true
+
+parserOptions:
+    ecmaVersion: 2017
+
+plugins:
+    - import
+
+rules:
+    semi: 0
+    lines-around-directive: 0
+    arrow-parens: 0
+    no-use-before-define: 0
+    no-unused-vars: 1
+    object-curly-spacing: 0
+    no-console: 0
+    dot-notation: 0
+    strict: 0
+    comma-dangle: 0

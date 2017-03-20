@@ -1,0 +1,14 @@
+{
+  "name": "bm5",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "eslint": {
+    "extends": "eslint:recommended"
+  },
+  "devDependencies": {
+    "eslint": "^3.15.0",
+    "eslint-config-airbnb-base": "^11.0.0",
+    "eslint-plugin-import": "^2.2.0"
+  }
+}
