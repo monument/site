@@ -1,4 +1,7 @@
-**database-watcher** watches “/photos”. When something is added or changed, it updates the “database”
+**database-watcher** watches “/photos”.
+
+When something is added or changed, it updates the “database”.
+
 - write to the individual metadata files for each modified file in “/metadata”
 - recreate the master metadata file from the individual files
 - records changes into its log
