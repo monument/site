@@ -56,8 +56,8 @@ module.exports = function* generateThumbnailsFor(
             ),
         },
         {
-            width: w,
-            height: h,
+            width: w * 2,
+            height: h * 2,
             scale: 2,
             destPath: path.join(
                 intoDir,
