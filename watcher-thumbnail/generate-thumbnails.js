@@ -18,7 +18,7 @@ const pipeline = (input, w, h) =>
     sharp(input)
         .rotate() // automatically rotate the image
         .resize(w, h ? h : null)
-        .withoutEnlargement()
+        // .withoutEnlargement()
 
 const jpeg = (...args) =>
     pipeline(...args).jpeg({
