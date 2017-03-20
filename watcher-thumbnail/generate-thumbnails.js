@@ -45,14 +45,26 @@ module.exports = function* generateThumbnailsFor(
 ) {
     mkdirp.sync(intoDir)
 
-    const outputSizes = THUMBNAILS.map(([w, h]) => ({
-        width: w,
-        height: h,
-        destPath: path.join(
-            intoDir,
-            `${basename}_${w}${h ? `x${h}` : ''}`
-        ),
-    }))
+    const outputSizes = flatMap(THUMBNAILS, ([w, h]) => [
+        {
+            width: w,
+            height: h,
+            scale: 1,
+            destPath: path.join(
+                intoDir,
+                `${basename}_${w}${h ? `x${h}` : ''}`
+            ),
+        },
+        {
+            width: w,
+            height: h,
+            scale: 2,
+            destPath: path.join(
+                intoDir,
+                `${basename}_${w}${h ? `x${h}` : ''}@2x`
+            ),
+        }
+    ])
 
     const outputFiles = flatMap(outputSizes, info => [
         Object.assign({}, info, {
