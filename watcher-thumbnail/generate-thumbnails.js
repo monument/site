@@ -41,7 +41,7 @@ const THUMBNAILS = flatMap([100, 200, 400, 800, 1600, 2400], w => [
 
 module.exports = function* generateThumbnailsFor(
     inputFilepath,
-    {intoDir, basename}
+    {intoDir, basename, force=false}
 ) {
     mkdirp.sync(intoDir)
 
@@ -67,8 +67,8 @@ module.exports = function* generateThumbnailsFor(
 
     for (const {width, height, destPath, pipe} of outputFiles) {
         yield async () => {
-            logqueue(destPath)
-            if (await exists(destPath)) {
+            logqueue(`${destPath} ${force}`)
+            if (!force && await exists(destPath)) {
                 logignore(destPath)
                 return
             }

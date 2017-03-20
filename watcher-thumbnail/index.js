@@ -23,19 +23,21 @@ const PATTERN = '**/*'
 const GLOB = `${BASE}/${PATTERN}`
 
 const watcher = chokidar.watch(GLOB, {ignored: /[\/\\]\./})
+let isReady = false
 watcher.on('change', filepath => {
   debug('change', filepath)
-  addFileToQueue(filepath)
+  addFileToQueue(filepath, {force: true})
 })
 watcher.on('add', filepath => {
   debug('add', filepath)
-  addFileToQueue(filepath)
+  addFileToQueue(filepath, {force: isReady})
 })
 watcher.on('ready', () => {
   debug('ready')
+  isReady = true
 })
 
-async function addFileToQueue(filepath) {
+async function addFileToQueue(filepath, {force}={}) {
   // only add jpegs to the queue
   if (!isJpeg(filepath)) {
     return
@@ -50,6 +52,7 @@ async function addFileToQueue(filepath) {
   const gen = generateThumbnailsFor(filepath, {
     intoDir: destDir,
     basename: baseFilename,
+    force: force,
   })
 
   for (const futurePromise of gen) {
