@@ -11,7 +11,11 @@ const pify = require('pify')
 const glob = pify(require('glob'))
 const {readJobMetadata} = require('./job-metadata')
 
-module.exports = async function getMetadataFromJob(jobYear, jobName, {photosBase, metadataBase}={}) {
+module.exports = async function getMetadataFromJob(
+  jobYear,
+  jobName,
+  {photosBase, metadataBase} = {}
+) {
   const data = await readJobMetadata(jobYear, jobName, {base: metadataBase})
 
   const jobPhotoDir = path.join(photosBase, jobYear, jobName)
@@ -22,14 +26,10 @@ module.exports = async function getMetadataFromJob(jobYear, jobName, {photosBase
   data.photos = photos
 
   // set job.date to the oldest dated photo
-  data.date = photos.length ?
-    min(data.photos.map(p => p.date))
-    : null
+  data.date = photos.length ? min(data.photos.map(p => p.date)) : null
 
   // set job.year to the year of job.date
-  data.year = photos.length
-    ? data.date.split('-')[0]
-    : null
+  data.year = photos.length ? data.date.split('-')[0] : null
 
   // if no id: generate a new UUID
   // !data.id && console.log(data, data.id)
@@ -43,17 +43,21 @@ module.exports = async function getMetadataFromJob(jobYear, jobName, {photosBase
     ? first(sortBy(photos, p => p.datetime)).filename
     : null
 
-  data.info = mergeWith({
-    attributes: [],
-    category: null,
-    color: null,
-    finish: null,
-    keywords: [],
-    material: null,
-    shape: null,
-    size: null,
-    style: null,
-  }, data.info, customizer)
+  data.info = mergeWith(
+    {
+      attributes: [],
+      category: null,
+      color: null,
+      finish: null,
+      keywords: [],
+      material: null,
+      shape: null,
+      size: null,
+      style: null,
+    },
+    data.info,
+    customizer
+  )
 
   return data
 }

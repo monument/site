@@ -37,7 +37,7 @@ watcher.on('ready', () => {
   isReady = true
 })
 
-async function addFileToQueue(filepath, {force}={}) {
+async function addFileToQueue(filepath, {force} = {}) {
   // only add jpegs to the queue
   if (!isJpeg(filepath)) {
     return

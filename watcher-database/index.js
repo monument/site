@@ -2,24 +2,27 @@
 'use strict'
 
 process.on('unhandledRejection', function(reason, p) {
-    console.error('Unhandled rejection in', p)
-    console.error('Reason:', reason)
+  console.error('Unhandled rejection in', p)
+  console.error('Reason:', reason)
 })
 
 const chokidar = require('chokidar')
 const PQueue = require('p-queue')
 const debug = require('debug')('bmc:watcher:database')
-const { getInfoFromImage, checkEnvVars, isJpeg } = require('../lib')
+const {getInfoFromImage, checkEnvVars, isJpeg} = require('../lib')
 const getMetadataFromJob = require('./get-metadata-from-job')
 const {writeJobMetadata} = require('./job-metadata')
 const db = require('./db')
 const writeDatabase = require('./write-database')
 
-const {BMC_PHOTOS_DIR, BMC_METADATA_DIR, BMC_DATABASE_FILE} = checkEnvVars(
-  'BMC_PHOTOS_DIR',
-  'BMC_METADATA_DIR',
-  {key: 'BMC_DATABASE_FILE', mode: 'file'}
-)
+const {
+  BMC_PHOTOS_DIR,
+  BMC_METADATA_DIR,
+  BMC_DATABASE_FILE,
+} = checkEnvVars('BMC_PHOTOS_DIR', 'BMC_METADATA_DIR', {
+  key: 'BMC_DATABASE_FILE',
+  mode: 'file',
+})
 
 const queue = new PQueue({concurrency: 4})
 
@@ -44,7 +47,9 @@ async function addFileToQueue(filepath, mode) {
     return
   }
 
-  const {jobName, jobYear} = await getInfoFromImage(filepath, {root: BMC_METADATA_DIR})
+  const {jobName, jobYear} = await getInfoFromImage(filepath, {
+    root: BMC_METADATA_DIR,
+  })
 
   queue.add(async () => {
     const data = await getMetadataFromJob(jobYear, jobName, {

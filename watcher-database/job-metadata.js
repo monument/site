@@ -4,12 +4,21 @@ const path = require('path')
 const mkdirp = require('mkdirp')
 const {readJsonFile, writeJsonFile} = require('./files')
 
-module.exports.readJobMetadata = async function readJobMetadata(jobYear, jobName, {base}={}) {
+module.exports.readJobMetadata = async function readJobMetadata(
+  jobYear,
+  jobName,
+  {base} = {}
+) {
   const filepath = makeMetadataFilePath(jobYear, jobName, base)
   return (await readJsonFile(filepath)) || {}
 }
 
-module.exports.writeJobMetadata = async function writeJobMetadata(jobYear, jobName, data, {base}={}) {
+module.exports.writeJobMetadata = async function writeJobMetadata(
+  jobYear,
+  jobName,
+  data,
+  {base} = {}
+) {
   const filepath = makeMetadataFilePath(jobYear, jobName, base)
   await mkdirp(path.dirname(filepath))
   return writeJsonFile(filepath, data)

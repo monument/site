@@ -9,7 +9,10 @@ module.exports.writeJsonFile = async function writeJsonFile(filepath, data) {
   return fs.writeFile(filepath, stringified, 'utf-8')
 }
 
-module.exports.readJsonFile = async function readJsonFile(filepath, attempt=1) {
+module.exports.readJsonFile = async function readJsonFile(
+  filepath,
+  attempt = 1
+) {
   let data
   try {
     data = await fs.readFile(filepath, 'utf-8')
@@ -30,7 +33,7 @@ module.exports.readJsonFile = async function readJsonFile(filepath, attempt=1) {
         throw e
       }
       await delay(500)
-      return readJsonFile(filepath, attempt+1)
+      return readJsonFile(filepath, attempt + 1)
     } catch (err) {
       console.log(filepath)
       console.log(Buffer.from(data))
