@@ -1,17 +1,18 @@
-extends: eslint:recommended
+extends: [eslint:recommended, prettier]
 
 env:
     node: true
     es6: true
 
 parserOptions:
-    ecmaVersion: 2017
+  ecmaVersion: ES2017
+  sourceType: module
 
 plugins:
     - import
 
 rules:
-    semi: 0
+    semi: [2, never]
     lines-around-directive: 0
     arrow-parens: 0
     no-use-before-define: 0

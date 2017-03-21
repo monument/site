@@ -3,14 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
-  "dependencies": {
-    "chokidar": "^1.6.1",
-    "debug": "^2.6.1",
-    "glob": "^7.1.1",
-    "graceful-fs": "^4.1.11",
-    "mkdirp": "^0.5.1",
-    "p-queue": "^1.0.0",
-    "pify": "^2.3.0",
-    "sharp": "^0.17.2"
-  }
+  "scripts": {
+    "start": "source ../env.sh && env DEBUG=bmc:* node index.js"
+  },
+  "dependencies": {}
 }
