@@ -32,7 +32,7 @@ const webp = (...args) =>
         quality: 70,
     })
 
-const THUMBNAILS = flatMap([100, 200, 400, 800, 1600, 2400], w => [
+const THUMBNAILS = flatMap([100, 200, 400, 800, 1600], w => [
     [w, null], // original size
     [w, w], // square
     [w/5*4, w], // portrait
