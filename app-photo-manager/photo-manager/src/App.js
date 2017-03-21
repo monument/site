@@ -68,8 +68,8 @@ const thumbs = `${base}/thumbnails/`
 class JobItem extends React.PureComponent {
   render() {
     const job = this.props.job
-    const featured = `${thumbs}/${encodeURIComponent(job.year)}/${encodeURIComponent(job.title)}/${encodeURIComponent(job.featured)}_400@2x.jpg`
-    console.log(featured)
+    const featured = `${thumbs}/${encodeURIComponent(job.year)}/${encodeURIComponent(job.title)}/${encodeURIComponent(job.featured)}_320x400@2x.jpg`
+
     return <JobDetails>
       <Summary>
         <JobHeading>{job.title}</JobHeading>
