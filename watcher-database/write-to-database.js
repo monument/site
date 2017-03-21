@@ -19,7 +19,7 @@ async function updateDatabase(jobName, jobYear, data, dbfile) {
   }
 
   if (db.find(entry => entry.id === data.id)) {
-    db = db.filter(entry => entry.id === data.id).concat(data)
+    db = db.filter(entry => entry.id !== data.id).concat(data)
   } else {
     db = uniqBy([...db, data], entry => `${entry.date} ${entry.title}`)
   }

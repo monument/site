@@ -21,10 +21,10 @@ const dbwatcher = chokidar.watch(GLOB, {
   ignored: /[\/\\]\./,
   awaitWriteFinish: true,
 })
-dbwatcher.on('change', filepath => {
-  debug('change', filepath)
-  queue.add(() => processFileForDatabase(filepath, BMC_DATABASE_FILE))
-})
+// dbwatcher.on('change', filepath => {
+//   debug('change', filepath)
+//   queue.add(() => processFileForDatabase(filepath, BMC_DATABASE_FILE))
+// })
 dbwatcher.on('add', filepath => {
   debug('add', filepath)
   queue.add(() => processFileForDatabase(filepath, BMC_DATABASE_FILE))

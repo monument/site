@@ -6,9 +6,9 @@ const min = require('lodash/min')
 const first = require('lodash/first')
 const mergeWith = require('lodash/mergeWith')
 const uuid = require('uuid/v4')
+const {getPhotoInfo} = require('../lib')
 const pify = require('pify')
 const glob = pify(require('glob'))
-const getPhotoMetadata = require('./get-photo-metadata')
 const {readJobMetadata} = require('./job-metadata')
 
 module.exports = async function getMetadataFromJob(jobYear, jobName, {photosBase, metadataBase}={}) {
@@ -16,7 +16,7 @@ module.exports = async function getMetadataFromJob(jobYear, jobName, {photosBase
 
   const jobPhotoDir = path.join(photosBase, jobYear, jobName)
   const photoFiles = await listPhotoFilesForJob(jobPhotoDir)
-  const photos = await Promise.all(photoFiles.map(getPhotoMetadata))
+  const photos = await Promise.all(photoFiles.map(getPhotoInfo))
 
   // set the photos list
   data.photos = photos
@@ -59,7 +59,7 @@ module.exports = async function getMetadataFromJob(jobYear, jobName, {photosBase
 }
 
 async function listPhotoFilesForJob(jobPhotoDir) {
-  return glob(path.join(jobPhotoDir, '**/*.{jpg,jpeg}'))
+  return glob(path.join(jobPhotoDir, '**/*.{jpg,jpeg}'), {nocase: true})
 }
 
 function customizer(objValue, srcValue) {

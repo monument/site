@@ -20,6 +20,7 @@ const GLOB = `${BASE}/${PATTERN}`
 
 const watcher = chokidar.watch(GLOB, {
   ignored: /[\/\\]\./,
+  awaitWriteFinish: true,
 })
 watcher.on('change', filepath => {
   debug('change', filepath)
