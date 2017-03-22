@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import logo from './logo.svg'
 import styled from 'styled-components'
 
@@ -70,13 +70,15 @@ class JobItem extends React.PureComponent {
     const job = this.props.job
     const featured = `${thumbs}/${encodeURIComponent(job.year)}/${encodeURIComponent(job.title)}/${encodeURIComponent(job.featured)}_320x400@2x.jpg`
 
-    return <JobDetails>
-      <Summary>
-        <JobHeading>{job.title}</JobHeading>
-        <JobImg src={featured} width={400} />
-      </Summary>
-      <pre><code>{JSON.stringify(job, null, 2)}</code></pre>
-    </JobDetails>
+    return (
+      <JobDetails>
+        <Summary>
+          <JobHeading>{job.title}</JobHeading>
+          <JobImg src={featured} width={400} />
+        </Summary>
+        <pre><code>{JSON.stringify(job, null, 2)}</code></pre>
+      </JobDetails>
+    )
   }
 }
 
@@ -92,9 +94,11 @@ class JobList extends React.PureComponent {
   }
 
   render() {
-    return <JobGrid>
-      {this.state.jobs.map(j => <li key={j.id}><JobItem job={j} /></li>)}
-    </JobGrid>
+    return (
+      <JobGrid>
+        {this.state.jobs.map(j => <li key={j.id}><JobItem job={j} /></li>)}
+      </JobGrid>
+    )
   }
 }
 

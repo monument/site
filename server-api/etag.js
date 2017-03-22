@@ -1,18 +1,17 @@
-
 /**
  * Module dependencies.
  */
 
-var calculate = require('etag');
-var Stream = require('stream');
+var calculate = require('etag')
+var Stream = require('stream')
 var pify = require('pify')
-var fs = pify(require('fs'));
+var fs = pify(require('fs'))
 
 /**
  * Expose `etag`.
  */
 
-module.exports = etag;
+module.exports = etag
 
 /**
  * Add ETag header field.
@@ -26,35 +25,35 @@ function etag(options) {
   return function etag(ctx, next) {
     return next()
       .then(() => getResponseEntity(ctx))
-      .then(entity => setEtag(ctx, entity, options));
-  };
+      .then(entity => setEtag(ctx, entity, options))
+  }
 }
 
 function getResponseEntity(ctx, options) {
   // no body
-  var body = ctx.body;
-  if (!body || ctx.response.get('ETag')) return;
+  var body = ctx.body
+  if (!body || ctx.response.get('ETag')) return
 
   // type
-  var status = ctx.status / 100 | 0;
+  var status = ctx.status / 100 | 0
 
   // 2xx
-  if (2 != status) return;
+  if (2 != status) return
 
   if (body instanceof Stream) {
-    if (!body.path) return;
-    return fs.stat(body.path).catch(noop);
-  } else if (('string' == typeof body) || Buffer.isBuffer(body)) {
-    return body;
+    if (!body.path) return
+    return fs.stat(body.path).catch(noop)
+  } else if ('string' == typeof body || Buffer.isBuffer(body)) {
+    return body
   } else {
-    return JSON.stringify(body);
+    return JSON.stringify(body)
   }
 }
 
 function setEtag(ctx, entity, options) {
-  if (!entity) return;
+  if (!entity) return
 
-  ctx.response.etag = calculate(entity, options);
+  ctx.response.etag = calculate(entity, options)
 }
 
 function noop() {}

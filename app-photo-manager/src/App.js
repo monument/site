@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import logo from './logo.svg'
 import styled, {keyframes} from 'styled-components'
 import fuzzy from 'fuzzysearch'
@@ -107,26 +107,32 @@ class JobItem extends React.PureComponent {
     const link = `${job.year}/${encodeURIComponent(job.title)}`
     const featured = `${base}/job/${link}/featured/400x400`
 
-    return <JobBlock href={`/${link}`}>
-      <JobImg srcSet={`${featured}, ${featured}/@2x 2x`} width={400} />
-      {/*<JobHeading>{job.title}</JobHeading>*/}
-      {/*<pre><code>{JSON.stringify(job, null, 2)}</code></pre>*/}
-    </JobBlock>
+    return (
+      <JobBlock href={`/${link}`}>
+        <JobImg srcSet={`${featured}, ${featured}/@2x 2x`} width={400} />
+        {/*<JobHeading>{job.title}</JobHeading>*/}
+        {/*<pre><code>{JSON.stringify(job, null, 2)}</code></pre>*/}
+      </JobBlock>
+    )
   }
 }
 
 class JobList extends React.PureComponent {
   render() {
-    return <JobGrid>
-      {this.props.jobs.map(j => <JobListItem key={j.id}><JobItem job={j} /></JobListItem>)}
-    </JobGrid>
+    return (
+      <JobGrid>
+        {this.props.jobs.map(j => (
+          <JobListItem key={j.id}><JobItem job={j} /></JobListItem>
+        ))}
+      </JobGrid>
+    )
   }
 }
 
 class SearchBox extends React.PureComponent {
   onChange = event => {
     this.props.onChange(event.target.value)
-  }
+  };
 
   render() {
     return <SearchInput onChange={this.onChange} value={this.props.text} />
@@ -142,22 +148,25 @@ class Ionicon extends React.PureComponent {
 
 class SingleSearchOperator extends React.PureComponent {
   render() {
-    return <SingleSearchOperatorWrapper>
-      {this.props.operator.name}
-    </SingleSearchOperatorWrapper>
+    return (
+      <SingleSearchOperatorWrapper>
+        {this.props.operator.name}
+      </SingleSearchOperatorWrapper>
+    )
   }
 }
 
 class SearchOperators extends React.PureComponent {
-  onChange = event => {
-
-  }
+  onChange = event => {};
 
   render() {
-    return <SearchOperatorsWrapper>
-      {this.props.operators.map(op =>
-        <SingleSearchOperator key={op.name} operator={op} />)}
-    </SearchOperatorsWrapper>
+    return (
+      <SearchOperatorsWrapper>
+        {this.props.operators.map(op => (
+          <SingleSearchOperator key={op.name} operator={op} />
+        ))}
+      </SearchOperatorsWrapper>
+    )
   }
 }
 
@@ -165,10 +174,12 @@ class JobSearch extends React.PureComponent {
   state = {
     searchText: '',
     jobs: [],
-    operators: [{
-      name: 'Size',
-    }]
-  }
+    operators: [
+      {
+        name: 'Size',
+      },
+    ],
+  };
 
   async componentWillMount() {
     let jobs = await fetch(database).then(r => r.json())
@@ -177,26 +188,32 @@ class JobSearch extends React.PureComponent {
 
   onSearch = text => {
     this.setState(() => ({searchText: text}))
-  }
+  };
 
-  onSearchOp = () => {
-  }
+  onSearchOp = () => {};
 
   render() {
     const query = this.state.searchText.toLowerCase()
-    const jobs = this.state.jobs.filter(j =>
-      fuzzy(query, j.title.toLowerCase()) ||
+    const jobs = this.state.jobs.filter(
+      j =>
+        fuzzy(query, j.title.toLowerCase()) ||
         Object.values(j.info)
           .map(v => Array.isArray(v) ? v.join(', ') : v)
           .filter(v => v)
           .map(v => v.toLowerCase())
-          .some(v => fuzzy(query, v)))
+          .some(v => fuzzy(query, v))
+    )
 
-    return <SearchWrapper>
-      <SearchBox text={this.state.searchText} onChange={this.onSearch} />
-      <SearchOperators operators={this.state.operators} onChange={this.onSearchOp} />
-      <JobList jobs={jobs} />
-    </SearchWrapper>
+    return (
+      <SearchWrapper>
+        <SearchBox text={this.state.searchText} onChange={this.onSearch} />
+        <SearchOperators
+          operators={this.state.operators}
+          onChange={this.onSearchOp}
+        />
+        <JobList jobs={jobs} />
+      </SearchWrapper>
+    )
   }
 }
 
