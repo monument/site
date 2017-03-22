@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import styled from 'styled-components'
 import fuzzy from 'fuzzysearch'
-import Router from 'react-router-dom'
+import {BrowserRouter, Route, Switch, Link} from 'react-router-dom'
 
 const AppWrapper = styled.div`
   text-align: center;
@@ -31,7 +31,7 @@ const JobListItem = styled.li`
   // grid-row: span 2;
 `
 
-const JobBlock = styled.a`
+const JobBlock = styled(Link)`
   display: block;
 
   border-radius: 3px;
@@ -47,6 +47,24 @@ const JobBlock = styled.a`
   }
 
   &:hover, &:focus {
+    box-shadow: 0 6px 10px 0 hsla(219, 50%, 20%, 0.14),
+                0 1px 18px 0 hsla(219, 50%, 20%, 0.12),
+                0 3px 5px -1px hsla(219, 50%, 20%, 0.3);
+  }
+`
+
+const JobDetailImage = styled.img`
+  display: block;
+
+  border-radius: 3px;
+  overflow: hidden;
+
+  transition: 0.2s;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),
+              0 1px 5px 0 rgba(0,0,0,0.12),
+              0 3px 1px -2px rgba(0,0,0,0.2);
+
+  &:hover {
     box-shadow: 0 6px 10px 0 hsla(219, 50%, 20%, 0.14),
                 0 1px 18px 0 hsla(219, 50%, 20%, 0.12),
                 0 3px 5px -1px hsla(219, 50%, 20%, 0.3);
@@ -98,18 +116,41 @@ const SingleSearchOperatorWrapper = styled.div`
   background-color: lightyellow;
 `
 
+const JobWrapper = styled.div``
+
 const base = 'http://localhost:3001'
 const database = `${base}/jobs`
+
+class JobPhoto extends React.PureComponent {
+  render() {
+    const {
+      year,
+      title,
+      size = '400',
+      imageName,
+    } = this.props
+
+    const eyear = encodeURIComponent(year)
+    const etitle = encodeURIComponent(title)
+
+    const filename = imageName
+      ? `photo/${encodeURIComponent(imageName)}`
+      : 'featured'
+
+    const url = `${base}/job/${eyear}/${etitle}/${filename}/${size}x${size}`
+
+    return <JobDetailImage srcSet={`${url}, ${url}/@2x 2x`} width={size} />
+  }
+}
 
 class JobItem extends React.PureComponent {
   render() {
     const job = this.props.job
-    const link = `${job.year}/${encodeURIComponent(job.title)}`
-    const featured = `${base}/job/${link}/featured/400x400`
+    const url = `/job/${encodeURIComponent(job.year)}/${encodeURIComponent(job.title)}`
 
     return (
-      <JobBlock href={`/${link}`}>
-        <JobImg srcSet={`${featured}, ${featured}/@2x 2x`} width={400} />
+      <JobBlock to={url}>
+        <JobPhoto year={job.year} title={job.title} />
         {/*<JobHeading>{job.title}</JobHeading>*/}
         {/*<pre><code>{JSON.stringify(job, null, 2)}</code></pre>*/}
       </JobBlock>
@@ -182,7 +223,7 @@ class JobSearch extends React.PureComponent {
   };
 
   async componentWillMount() {
-    let jobs = await fetch(database).then(r => r.json())
+    const jobs = await fetch(database).then(r => r.json())
     this.setState(() => ({jobs}))
   }
 
@@ -217,12 +258,65 @@ class JobSearch extends React.PureComponent {
   }
 }
 
+class JobPhotoList extends React.PureComponent {
+  render() {
+    const {job} = this.props
+    return (
+      <div>
+        {job.photos.map(p => (
+          <JobPhoto
+            key={p.filename}
+            year={job.year}
+            title={job.title}
+            imageName={p.filename}
+          />
+        ))}
+      </div>
+    )
+  }
+}
+
+class JobInfo extends React.PureComponent {
+  render() {
+    return this.props.job
+      ? <div>
+          <span>{JSON.stringify(this.props.job, null, 2)}</span>
+          <JobPhotoList job={this.props.job} />
+        </div>
+      : <span>Loading…</span>
+  }
+}
+
+class JobDetail extends React.PureComponent {
+  state = {
+    job: null,
+  };
+
+  async componentWillMount() {
+    const {match} = this.props
+    const {year, title} = match.params
+    const job = await fetch(`${base}/job/${year}/${title}`).then(r => r.json())
+    this.setState(() => ({job}))
+  }
+
+  render() {
+    return (
+      <JobWrapper>
+        <JobInfo job={this.state.job} />
+      </JobWrapper>
+    )
+  }
+}
+
 class App extends Component {
   render() {
     return (
-      <AppWrapper>
-        <JobSearch />
-      </AppWrapper>
+      <BrowserRouter>
+        <AppWrapper>
+          <Route exact path="/" component={JobSearch} />
+          <Route path="/job/:year/:title" component={JobDetail} />
+        </AppWrapper>
+      </BrowserRouter>
     )
   }
 }
