@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import logo from './logo.svg'
 import styled, {keyframes} from 'styled-components'
+import fuzzy from 'fuzzysearch'
 
 const AppWrapper = styled.div`
   text-align: center;
@@ -15,8 +16,8 @@ const List = styled.ul`
 
 const JobGrid = styled(List)`
   display: grid;
-  grid-template-columns: repeat(auto-fill, 100px);
-  grid-auto-rows: 100px;
+  grid-template-columns: repeat(auto-fill, 200px);
+  grid-auto-rows: 200px;
   grid-gap: 1em;
   justify-content: center;
 `
@@ -26,8 +27,8 @@ const JobImg = styled.img`
 `
 
 const JobListItem = styled.li`
-  grid-column: span 2;
-  grid-row: span 1;
+  // grid-column: span 2;
+  // grid-row: span 2;
 `
 
 const JobBlock = styled.a`
@@ -97,18 +98,17 @@ const SingleSearchOperatorWrapper = styled.div`
   background-color: lightyellow;
 `
 
-const base = 'http://localhost:3000/pub/'
-const database = `${base}/database.json`
-const thumbs = `${base}/thumbnails/`
+const base = 'http://localhost:3001'
+const database = `${base}/jobs`
 
 class JobItem extends React.PureComponent {
   render() {
     const job = this.props.job
-    const link = `${job.year}/${job.title}`
-    const featured = `${thumbs}/${link}/${encodeURIComponent(job.featured)}_400x400@2x.jpg`
+    const link = `${job.year}/${encodeURIComponent(job.title)}`
+    const featured = `${base}/job/${link}/featured/400x400`
 
     return <JobBlock href={`/${link}`}>
-      <JobImg src={featured} width={400} />
+      <JobImg srcSet={`${featured}, ${featured}/@2x 2x`} width={400} />
       {/*<JobHeading>{job.title}</JobHeading>*/}
       {/*<pre><code>{JSON.stringify(job, null, 2)}</code></pre>*/}
     </JobBlock>
@@ -183,8 +183,15 @@ class JobSearch extends React.PureComponent {
   }
 
   render() {
-    const query = new RegExp(this.state.searchText, 'i')
-    const jobs = this.state.jobs.filter(j => query.test(j.title))
+    const query = this.state.searchText.toLowerCase()
+    const jobs = this.state.jobs.filter(j =>
+      fuzzy(query, j.title.toLowerCase()) ||
+        Object.values(j.info)
+          .map(v => Array.isArray(v) ? v.join(', ') : v)
+          .filter(v => v)
+          .map(v => v.toLowerCase())
+          .some(v => fuzzy(query, v)))
+
     return <SearchWrapper>
       <SearchBox text={this.state.searchText} onChange={this.onSearch} />
       <SearchOperators operators={this.state.operators} onChange={this.onSearchOp} />
