@@ -1,3 +1,5 @@
+parser: babel-eslint
+
 extends:
     - eslint:recommended
     - prettier
@@ -7,7 +9,6 @@ env:
     es6: true
 
 parserOptions:
-    ecmaVersion: es2017
     sourceType: module
     ecmaFeatures:
         experimentalObjectRestSpread: true
@@ -22,6 +23,7 @@ rules:
     arrow-parens: 0
     no-use-before-define: 0
     no-unused-vars: 1
+    no-redeclare: 0
     object-curly-spacing: 0
     no-console: 0
     dot-notation: 0

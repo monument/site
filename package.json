@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
-  "eslint": {
-    "extends": "eslint:recommended"
-  },
   "scripts": {
     "prettier": "prettier --write --single-quote --no-bracket-spacing --trailing-comma es5 */*.js && eslint --fix */*.js"
   },
@@ -35,6 +32,7 @@
     "uuid": "^3.0.1"
   },
   "devDependencies": {
+    "babel-eslint": "^7.1.1",
     "eslint": "^3.18.0",
     "eslint-config-prettier": "^1.5.0",
     "eslint-plugin-import": "^2.2.0",
