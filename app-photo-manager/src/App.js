@@ -1,17 +1,14 @@
 import React, {Component} from 'react'
 import styled from 'styled-components'
 import fuzzy from 'fuzzysearch'
-import {BrowserRouter, Route, Switch, Link} from 'react-router-dom'
+import {BrowserRouter, Route, Link} from 'react-router-dom'
+
+import {List, Image} from './components'
+import {shadow1, shadow2} from './mixins'
 
 const AppWrapper = styled.div`
   text-align: center;
   margin: 1em;
-`
-
-const List = styled.ul`
-  margin: 0;
-  list-style: none;
-  padding: 0;
 `
 
 const JobGrid = styled(List)`
@@ -22,25 +19,7 @@ const JobGrid = styled(List)`
   justify-content: center;
 `
 
-const JobImg = styled.img`
-  display: block;
-`
-
 const JobListItem = styled.li`
-  // grid-column: span 2;
-  // grid-row: span 2;
-`
-
-const shadow1 = `
-  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),
-              0 1px 5px 0 rgba(0,0,0,0.12),
-              0 3px 1px -2px rgba(0,0,0,0.2);
-`
-
-const shadow2 = `
-  box-shadow: 0 6px 10px 0 hsla(219, 50%, 20%, 0.14),
-              0 1px 18px 0 hsla(219, 50%, 20%, 0.12),
-              0 3px 5px -1px hsla(219, 50%, 20%, 0.3);
 `
 
 const shadowedBlock = `
@@ -132,7 +111,7 @@ const database = `${base}/jobs`
 class JobPhoto extends React.PureComponent {
   render() {
     const {
-      component=JobImg,
+      component=Image,
       year,
       title,
       size = '400x400',
@@ -148,9 +127,9 @@ class JobPhoto extends React.PureComponent {
 
     const url = `${base}/job/${eyear}/${etitle}/${filename}/${size}`
 
-    const Image = component
+    const Img = component
 
-    return <Image srcSet={`${url}, ${url}/@2x 2x`} />
+    return <Img srcSet={`${url}, ${url}/@2x 2x`} />
   }
 }
 
@@ -161,7 +140,7 @@ class JobItem extends React.PureComponent {
 
     return (
       <JobBlock to={url}>
-        <JobPhoto component={JobImg} year={job.year} title={job.title} />
+        <JobPhoto component={Image} year={job.year} title={job.title} />
         {/*<JobHeading>{job.title}</JobHeading>*/}
         {/*<pre><code>{JSON.stringify(job, null, 2)}</code></pre>*/}
       </JobBlock>
