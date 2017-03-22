@@ -1,12 +1,17 @@
-extends: [eslint:recommended, prettier]
+extends:
+    - eslint:recommended
+    - prettier
 
 env:
     node: true
     es6: true
 
 parserOptions:
-  ecmaVersion: ES2017
-  sourceType: module
+    ecmaVersion: es2017
+    sourceType: module
+    ecmaFeatures:
+        experimentalObjectRestSpread: true
+        jsx: true
 
 plugins:
     - import
