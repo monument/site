@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
-import logo from './logo.svg'
-import styled, {keyframes} from 'styled-components'
+import styled from 'styled-components'
 import fuzzy from 'fuzzysearch'
+import Router from 'react-router-dom'
 
 const AppWrapper = styled.div`
   text-align: center;
