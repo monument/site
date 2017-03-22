@@ -31,52 +31,54 @@ const JobListItem = styled.li`
   // grid-row: span 2;
 `
 
-const JobBlock = styled(Link)`
-  display: block;
-
-  border-radius: 3px;
-  overflow: hidden;
-
-  transition: 0.2s;
+const shadow1 = `
   box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),
               0 1px 5px 0 rgba(0,0,0,0.12),
               0 3px 1px -2px rgba(0,0,0,0.2);
+`
+
+const shadow2 = `
+  box-shadow: 0 6px 10px 0 hsla(219, 50%, 20%, 0.14),
+              0 1px 18px 0 hsla(219, 50%, 20%, 0.12),
+              0 3px 5px -1px hsla(219, 50%, 20%, 0.3);
+`
+
+const shadowedBlock = `
+  border-radius: 3px;
+  overflow: hidden;
+  ${shadow1}
+`
+
+const JobBlock = styled(Link)`
+  display: block;
+  transition: 0.2s;
+  ${shadowedBlock}
 
   &:focus {
     outline: 0;
   }
 
   &:hover, &:focus {
-    box-shadow: 0 6px 10px 0 hsla(219, 50%, 20%, 0.14),
-                0 1px 18px 0 hsla(219, 50%, 20%, 0.12),
-                0 3px 5px -1px hsla(219, 50%, 20%, 0.3);
+    ${shadow2}
   }
 `
 
 const JobDetailImage = styled.img`
   display: block;
+  ${shadowedBlock}
+`
 
-  border-radius: 3px;
-  overflow: hidden;
-
-  transition: 0.2s;
-  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),
-              0 1px 5px 0 rgba(0,0,0,0.12),
-              0 3px 1px -2px rgba(0,0,0,0.2);
-
-  &:hover {
-    box-shadow: 0 6px 10px 0 hsla(219, 50%, 20%, 0.14),
-                0 1px 18px 0 hsla(219, 50%, 20%, 0.12),
-                0 3px 5px -1px hsla(219, 50%, 20%, 0.3);
-  }
+const JobInfoWrapper = styled.div`
+  display: grid;
+  grid-template: "title title title" "photos json info";
 `
 
 const SearchInput = styled.input`
   outline: 0;
-  margin-bottom: 1rem;
 
   border: 0;
-  border-radius: 3px;
+  ${shadowedBlock}
+  margin-bottom: 1rem;
   font-size: 1rem;
   padding: 0.5em 0.75em;
   box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),
@@ -116,7 +118,13 @@ const SingleSearchOperatorWrapper = styled.div`
   background-color: lightyellow;
 `
 
-const JobWrapper = styled.div``
+const JobWrapper = styled.div`
+  padding: 1em;
+  background-color: white;
+  ${shadowedBlock}
+`
+
+const JobHeading = styled.h1``
 
 const base = 'http://localhost:3001'
 const database = `${base}/jobs`
@@ -124,9 +132,10 @@ const database = `${base}/jobs`
 class JobPhoto extends React.PureComponent {
   render() {
     const {
+      component=JobImg,
       year,
       title,
-      size = '400',
+      size = '400x400',
       imageName,
     } = this.props
 
@@ -137,9 +146,11 @@ class JobPhoto extends React.PureComponent {
       ? `photo/${encodeURIComponent(imageName)}`
       : 'featured'
 
-    const url = `${base}/job/${eyear}/${etitle}/${filename}/${size}x${size}`
+    const url = `${base}/job/${eyear}/${etitle}/${filename}/${size}`
 
-    return <JobDetailImage srcSet={`${url}, ${url}/@2x 2x`} width={size} />
+    const Image = component
+
+    return <Image srcSet={`${url}, ${url}/@2x 2x`} />
   }
 }
 
@@ -150,7 +161,7 @@ class JobItem extends React.PureComponent {
 
     return (
       <JobBlock to={url}>
-        <JobPhoto year={job.year} title={job.title} />
+        <JobPhoto component={JobImg} year={job.year} title={job.title} />
         {/*<JobHeading>{job.title}</JobHeading>*/}
         {/*<pre><code>{JSON.stringify(job, null, 2)}</code></pre>*/}
       </JobBlock>
@@ -180,12 +191,8 @@ class SearchBox extends React.PureComponent {
   }
 }
 
-class Ionicon extends React.PureComponent {
-  render() {
-    const {name} = this.props
-    return <Icon className={`ion-${name}`} />
-  }
-}
+
+const Ionicon = ({name}) => <Icon className={`ion-${name}`} />
 
 class SingleSearchOperator extends React.PureComponent {
   render() {
@@ -260,29 +267,34 @@ class JobSearch extends React.PureComponent {
 
 class JobPhotoList extends React.PureComponent {
   render() {
-    const {job} = this.props
+    const {job, style} = this.props
     return (
-      <div>
+      <List style={style}>
         {job.photos.map(p => (
-          <JobPhoto
-            key={p.filename}
-            year={job.year}
-            title={job.title}
-            imageName={p.filename}
-          />
+          <li key={p.filename} style={{marginBottom: '1em'}}>
+            <JobPhoto
+              component={JobDetailImage}
+              year={job.year}
+              title={job.title}
+              imageName={p.filename}
+              size='400'
+            />
+          </li>
         ))}
-      </div>
+      </List>
     )
   }
 }
 
 class JobInfo extends React.PureComponent {
   render() {
+    const {job} = this.props
     return this.props.job
-      ? <div>
-          <span>{JSON.stringify(this.props.job, null, 2)}</span>
-          <JobPhotoList job={this.props.job} />
-        </div>
+      ? <JobInfoWrapper>
+          <JobHeading style={{gridArea: 'title'}}>{job.title}</JobHeading>
+          <span>{JSON.stringify(job, null, 2)}</span>
+          <JobPhotoList style={{gridArea: 'photos'}} job={job} />
+        </JobInfoWrapper>
       : <span>Loading…</span>
   }
 }
