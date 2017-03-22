@@ -54,6 +54,7 @@ const JobInfoWrapper = styled.div`
 
 const SearchInput = styled.input`
   outline: 0;
+  width: 250px;
 
   border: 0;
   ${shadowedBlock}
@@ -69,33 +70,7 @@ const SearchInput = styled.input`
   }
 `
 
-const Icon = styled.span`
-  display: inline-block;
-  font-family: "Ionicons";
-  speak: none;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  text-rendering: auto;
-  line-height: 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-`
-
 const SearchWrapper = styled.div``
-
-const SearchOperatorsWrapper = styled.div`
-  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),
-              0 1px 5px 0 rgba(0,0,0,0.12),
-              0 3px 1px -2px rgba(0,0,0,0.2);
-
-  margin-bottom: 1rem;
-`
-
-const SingleSearchOperatorWrapper = styled.div`
-  background-color: lightyellow;
-`
 
 const JobWrapper = styled.div`
   padding: 1em;
@@ -166,34 +141,7 @@ class SearchBox extends React.PureComponent {
   };
 
   render() {
-    return <SearchInput onChange={this.onChange} value={this.props.text} />
-  }
-}
-
-
-const Ionicon = ({name}) => <Icon className={`ion-${name}`} />
-
-class SingleSearchOperator extends React.PureComponent {
-  render() {
-    return (
-      <SingleSearchOperatorWrapper>
-        {this.props.operator.name}
-      </SingleSearchOperatorWrapper>
-    )
-  }
-}
-
-class SearchOperators extends React.PureComponent {
-  onChange = event => {};
-
-  render() {
-    return (
-      <SearchOperatorsWrapper>
-        {this.props.operators.map(op => (
-          <SingleSearchOperator key={op.name} operator={op} />
-        ))}
-      </SearchOperatorsWrapper>
-    )
+    return <SearchInput placeholder="Search" onChange={this.onChange} value={this.props.text} />
   }
 }
 
@@ -234,10 +182,6 @@ class JobSearch extends React.PureComponent {
     return (
       <SearchWrapper>
         <SearchBox text={this.state.searchText} onChange={this.onSearch} />
-        <SearchOperators
-          operators={this.state.operators}
-          onChange={this.onSearchOp}
-        />
         <JobList jobs={jobs} />
       </SearchWrapper>
     )
