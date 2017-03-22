@@ -9,3 +9,9 @@ export const shadow2 = `
               0 1px 18px 0 hsla(219, 50%, 20%, 0.12),
               0 3px 5px -1px hsla(219, 50%, 20%, 0.3);
 `
+
+export const shadowedBlock = `
+  border-radius: 3px;
+  overflow: hidden;
+  ${shadow1}
+`
