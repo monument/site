@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "prettier": "prettier --write --single-quote --no-bracket-spacing --trailing-comma es5 */*.js && eslint --fix */*.js"
+    "prettier": "prettier --write --single-quote --no-bracket-spacing --trailing-comma es5 {app,server,watcher}-*/*.js app-*/src/*.js; eslint --fix {app,server,watcher}-*/*.js app-*/src/*.js"
   },
   "dependencies": {
     "chokidar": "^1.6.1",
