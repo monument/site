@@ -1,64 +1,100 @@
 import React, { Component } from 'react'
 import logo from './logo.svg'
-import styled from 'styled-components'
+import styled, {keyframes} from 'styled-components'
 
 const AppWrapper = styled.div`
   text-align: center;
-`
-
-const AppHeader = styled.div`
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
-`
-
-const Logo = styled.img`
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
-`
-
-const Intro = styled.p`
-  font-size: large;
+  margin: 1em;
 `
 
 const List = styled.ul`
-  text-align: left;
-  max-width: 40em;
-  margin: 0 auto;
-  padding: 0;
+  margin: 0;
   list-style: none;
+  padding: 0;
 `
 
 const JobGrid = styled(List)`
   display: grid;
-  grid-template-columns: repeat(4, 150px);
-  grid-column-gap: 1em;
-`
-
-const JobHeading = styled.h1`
-  font-size: 1em;
-
-  width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  grid-template-columns: repeat(auto-fill, 100px);
+  grid-auto-rows: 100px;
+  grid-gap: 1em;
+  justify-content: center;
 `
 
 const JobImg = styled.img`
   display: block;
 `
 
-const JobDetails = styled.details`
-
+const JobListItem = styled.li`
+  grid-column: span 2;
+  grid-row: span 1;
 `
 
-const Summary = styled.summary`
-  cursor: pointer;
+const JobBlock = styled.a`
+  display: block;
 
-  &::-webkit-details-marker {
-    display: none;
+  border-radius: 3px;
+  overflow: hidden;
+
+  transition: 0.2s;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),
+              0 1px 5px 0 rgba(0,0,0,0.12),
+              0 3px 1px -2px rgba(0,0,0,0.2);
+
+  &:focus {
+    outline: 0;
   }
+
+  &:hover, &:focus {
+    box-shadow: 0 6px 10px 0 hsla(219, 50%, 20%, 0.14),
+                0 1px 18px 0 hsla(219, 50%, 20%, 0.12),
+                0 3px 5px -1px hsla(219, 50%, 20%, 0.3);
+  }
+`
+
+const SearchInput = styled.input`
+  outline: 0;
+  margin-bottom: 1rem;
+
+  border: 0;
+  border-radius: 3px;
+  font-size: 1rem;
+  padding: 0.5em 0.75em;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),
+              0 1px 5px 0 rgba(0,0,0,0.12),
+              0 3px 1px -2px rgba(0,0,0,0.2);
+
+  &:focus {
+    background-color: lightblue;
+  }
+`
+
+const Icon = styled.span`
+  display: inline-block;
+  font-family: "Ionicons";
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  text-rendering: auto;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+`
+
+const SearchWrapper = styled.div``
+
+const SearchOperatorsWrapper = styled.div`
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),
+              0 1px 5px 0 rgba(0,0,0,0.12),
+              0 3px 1px -2px rgba(0,0,0,0.2);
+
+  margin-bottom: 1rem;
+`
+
+const SingleSearchOperatorWrapper = styled.div`
+  background-color: lightyellow;
 `
 
 const base = 'http://localhost:3000/pub/'
@@ -68,33 +104,92 @@ const thumbs = `${base}/thumbnails/`
 class JobItem extends React.PureComponent {
   render() {
     const job = this.props.job
-    const featured = `${thumbs}/${encodeURIComponent(job.year)}/${encodeURIComponent(job.title)}/${encodeURIComponent(job.featured)}_320x400@2x.jpg`
+    const link = `${job.year}/${job.title}`
+    const featured = `${thumbs}/${link}/${encodeURIComponent(job.featured)}_400x400@2x.jpg`
 
-    return <JobDetails>
-      <Summary>
-        <JobHeading>{job.title}</JobHeading>
-        <JobImg src={featured} width={400} />
-      </Summary>
-      <pre><code>{JSON.stringify(job, null, 2)}</code></pre>
-    </JobDetails>
+    return <JobBlock href={`/${link}`}>
+      <JobImg src={featured} width={400} />
+      {/*<JobHeading>{job.title}</JobHeading>*/}
+      {/*<pre><code>{JSON.stringify(job, null, 2)}</code></pre>*/}
+    </JobBlock>
   }
 }
 
 class JobList extends React.PureComponent {
-  constructor() {
-    super()
-    this.state = {jobs: []}
+  render() {
+    return <JobGrid>
+      {this.props.jobs.map(j => <JobListItem key={j.id}><JobItem job={j} /></JobListItem>)}
+    </JobGrid>
+  }
+}
+
+class SearchBox extends React.PureComponent {
+  onChange = event => {
+    this.props.onChange(event.target.value)
+  }
+
+  render() {
+    return <SearchInput onChange={this.onChange} value={this.props.text} />
+  }
+}
+
+class Ionicon extends React.PureComponent {
+  render() {
+    const {name} = this.props
+    return <Icon className={`ion-${name}`} />
+  }
+}
+
+class SingleSearchOperator extends React.PureComponent {
+  render() {
+    return <SingleSearchOperatorWrapper>
+      {this.props.operator.name}
+    </SingleSearchOperatorWrapper>
+  }
+}
+
+class SearchOperators extends React.PureComponent {
+  onChange = event => {
+
+  }
+
+  render() {
+    return <SearchOperatorsWrapper>
+      {this.props.operators.map(op =>
+        <SingleSearchOperator key={op.name} operator={op} />)}
+    </SearchOperatorsWrapper>
+  }
+}
+
+class JobSearch extends React.PureComponent {
+  state = {
+    searchText: '',
+    jobs: [],
+    operators: [{
+      name: 'Size',
+    }]
   }
 
   async componentWillMount() {
     let jobs = await fetch(database).then(r => r.json())
-    this.setState({jobs})
+    this.setState(() => ({jobs}))
+  }
+
+  onSearch = text => {
+    this.setState(() => ({searchText: text}))
+  }
+
+  onSearchOp = () => {
   }
 
   render() {
-    return <JobGrid>
-      {this.state.jobs.map(j => <li key={j.id}><JobItem job={j} /></li>)}
-    </JobGrid>
+    const query = new RegExp(this.state.searchText, 'i')
+    const jobs = this.state.jobs.filter(j => query.test(j.title))
+    return <SearchWrapper>
+      <SearchBox text={this.state.searchText} onChange={this.onSearch} />
+      <SearchOperators operators={this.state.operators} onChange={this.onSearchOp} />
+      <JobList jobs={jobs} />
+    </SearchWrapper>
   }
 }
 
@@ -102,14 +197,7 @@ class App extends Component {
   render() {
     return (
       <AppWrapper>
-        <AppHeader>
-          <Logo src={logo} alt="logo" />
-          <h2>Welcome to React</h2>
-        </AppHeader>
-        <Intro>
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </Intro>
-        <JobList />
+        <JobSearch />
       </AppWrapper>
     )
   }
