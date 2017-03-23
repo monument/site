@@ -26,11 +26,11 @@ const watcher = chokidar.watch(GLOB, {ignored: /[\/\\]\./})
 let isReady = false
 watcher.on('change', filepath => {
   debug('change', filepath)
-  addFileToQueue(filepath, {force: true})
+  queue.add(() => addFileToQueue(filepath, {force: true}))
 })
 watcher.on('add', filepath => {
   debug('add', filepath)
-  addFileToQueue(filepath, {force: isReady})
+  queue.add(() => addFileToQueue(filepath, {force: isReady}))
 })
 watcher.on('ready', () => {
   debug('ready')
