@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 BMC_ROOT="/mnt/volume-nyc1-02/Dropbox/Benchmark Photos"
 BMC_DATA="/mnt/volume-nyc1-02/Dropbox/Benchmark Photos/_data"

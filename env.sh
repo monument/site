@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/bin/sh
 
-if [[ $DIGITAL_OCEAN ]]; then
-    source ../env-do.sh
+if [ -n "$DIGITAL_OCEAN" ]; then
+    . ../env-do.sh
 else
-    source ../env-local.sh
+    . ../env-local.sh
 fi
