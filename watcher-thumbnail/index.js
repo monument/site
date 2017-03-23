@@ -3,6 +3,7 @@
 
 const chokidar = require('chokidar')
 const PQueue = require('p-queue')
+const mkdirp = require('mkdirp')
 const debug = require('debug')('bmc:watcher:thumbnail')
 const generateThumbnailsFor = require('./generate-thumbnails')
 const {
@@ -47,6 +48,8 @@ function addFileToQueue(filepath, {force} = {}) {
     const {baseFilename, destDir} = await getInfoFromImage(filepath, {
       root: BMC_THUMBNAILS_DIR,
     })
+
+    await mkdirp(destDir)
 
     // generateThumbnailsFor is a generator that
     // returns functions which return promises

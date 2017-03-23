@@ -2,7 +2,6 @@
 
 const flatMap = require('lodash/flatMap')
 const path = require('path')
-const mkdirp = require('mkdirp')
 const exists = require('./exists')
 const _debug = require('debug')
 const logqueue = _debug('bmc:watcher:thumbnail:generator:queue')
@@ -40,8 +39,6 @@ module.exports = function* generateThumbnailsFor(
   inputFilepath,
   {intoDir, basename, force = false}
 ) {
-  mkdirp.sync(intoDir)
-
   const outputSizes = flatMap(THUMBNAILS, ([w, h]) => [
     {
       width: w,
