@@ -52,6 +52,7 @@ async function addFileToQueue(filepath, mode) {
   })
 
   queue.add(async () => {
+    console.log(process.memoryUsage())
     const data = await getMetadataFromJob(jobYear, jobName, {
       photosBase: BMC_PHOTOS_DIR,
       metadataBase: BMC_METADATA_DIR,
