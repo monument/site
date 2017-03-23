@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 'use strict'
 
+require('loud-rejection')
 const chokidar = require('chokidar')
 const PQueue = require('p-queue')
 const debug = require('debug')('bmc:watcher:thumbnail')
