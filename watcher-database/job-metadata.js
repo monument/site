@@ -1,6 +1,7 @@
 'use strict'
 
 const path = require('path')
+const debug = require('debug')('bmc:watcher:database')
 const mkdirp = require('mkdirp')
 const {readJsonFile, writeJsonFile} = require('./files')
 
@@ -20,6 +21,7 @@ module.exports.writeJobMetadata = async function writeJobMetadata(
   {base} = {}
 ) {
   const filepath = makeMetadataFilePath(jobYear, jobName, base)
+  debug(`writing ${filepath}`)
   await mkdirp(path.dirname(filepath))
   return writeJsonFile(filepath, data)
 }

@@ -1,11 +1,10 @@
 'use strict'
 
+const pDebounce = require('p-debounce')
 const debug = require('debug')('bmc:watcher:database')
 const {writeJsonFile} = require('./files')
 
-module.exports = function throttledWriteDatabase(db, toFile) {
-  writeDatabase(db, toFile)
-}
+module.exports = pDebounce(writeDatabase, 1000)
 
 function writeDatabase(db, toFile) {
   debug(

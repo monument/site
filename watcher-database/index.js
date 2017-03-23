@@ -24,7 +24,7 @@ const {
   mode: 'file',
 })
 
-const queue = new PQueue({concurrency: 4})
+const queue = new PQueue({concurrency: 1})
 
 const BASE = BMC_PHOTOS_DIR
 const PATTERN = '**/*'
@@ -65,7 +65,10 @@ function addFileToQueue(filepath, mode) {
       db.remove(data.id)
     }
 
-    queue.add(async () => writeJobMetadata(jobYear, jobName, data, {base: BMC_METADATA_DIR}))
-    queue.add(async () => writeDatabase(db, BMC_DATABASE_FILE))
+    writeDatabase(db, BMC_DATABASE_FILE)
+
+    return writeJobMetadata(jobYear, jobName, data, {
+      base: BMC_METADATA_DIR,
+    })
   })
 }
