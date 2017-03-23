@@ -65,7 +65,7 @@ function addFileToQueue(filepath, mode) {
       db.remove(data.id)
     }
 
-    queue.add(() => writeJobMetadata(jobYear, jobName, data, {base: BMC_METADATA_DIR}))
-    queue.add(() => writeDatabase(db, BMC_DATABASE_FILE))
+    queue.add(async () => writeJobMetadata(jobYear, jobName, data, {base: BMC_METADATA_DIR}))
+    queue.add(async () => writeDatabase(db, BMC_DATABASE_FILE))
   })
 }
