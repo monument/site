@@ -49,11 +49,13 @@ async function addFileToQueue(filepath, mode) {
     return
   }
 
-  const {jobName, jobYear} = await getInfoFromImage(filepath, {
-    root: BMC_METADATA_DIR,
-  })
-
   queue.add(async () => {
+    console.log(`beginning ${filepath}`)
+
+    const {jobName, jobYear} = await getInfoFromImage(filepath, {
+      root: BMC_METADATA_DIR,
+    })
+
     const data = await getMetadataFromJob(jobYear, jobName, {
       photosBase: BMC_PHOTOS_DIR,
       metadataBase: BMC_METADATA_DIR,
