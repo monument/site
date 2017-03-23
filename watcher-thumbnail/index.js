@@ -2,6 +2,11 @@
 'use strict'
 
 require('loud-rejection')
+process.on('unhandledRejection', (reason, p) => {
+    console.error('Unhandled rejection in', p)
+    console.error('Reason:', reason)
+})
+
 const chokidar = require('chokidar')
 const PQueue = require('p-queue')
 const debug = require('debug')('bmc:watcher:thumbnail')
