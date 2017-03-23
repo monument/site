@@ -39,6 +39,8 @@ watcher.on('add', filepath => addFileToQueue(filepath, 'add'))
 watcher.on('change', filepath => addFileToQueue(filepath, 'change'))
 watcher.on('unlink', filepath => addFileToQueue(filepath, 'unlink'))
 
+setInterval(() => console.log(process.memoryUsage()), 500)
+
 async function addFileToQueue(filepath, mode) {
   debug(mode, filepath)
 
@@ -52,7 +54,6 @@ async function addFileToQueue(filepath, mode) {
   })
 
   queue.add(async () => {
-    console.log(process.memoryUsage())
     const data = await getMetadataFromJob(jobYear, jobName, {
       photosBase: BMC_PHOTOS_DIR,
       metadataBase: BMC_METADATA_DIR,
