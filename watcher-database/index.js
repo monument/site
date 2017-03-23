@@ -53,6 +53,7 @@ function addFileToQueue(filepath, mode) {
     })
 
     const data = await getMetadataFromJob(jobYear, jobName, {
+      useDirName: true,
       photosBase: BMC_PHOTOS_DIR,
       metadataBase: BMC_METADATA_DIR,
     })

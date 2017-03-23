@@ -47,6 +47,7 @@ function addFileToQueue(filepath, {force} = {}) {
   queue.add(async () => {
     const {baseFilename, destDir} = await getInfoFromImage(filepath, {
       root: BMC_THUMBNAILS_DIR,
+      useDirName: true,
     })
 
     await mkdirp(destDir)
