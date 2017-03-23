@@ -1,12 +1,6 @@
 #!/usr/bin/env node
 'use strict'
 
-require('loud-rejection')
-process.on('unhandledRejection', (reason, p) => {
-    console.error('Unhandled rejection in', p)
-    console.error('Reason:', reason)
-})
-
 const chokidar = require('chokidar')
 const PQueue = require('p-queue')
 const debug = require('debug')('bmc:watcher:thumbnail')
@@ -32,11 +26,11 @@ const watcher = chokidar.watch(GLOB, {ignored: /[\/\\]\./})
 let isReady = false
 watcher.on('change', filepath => {
   debug('change', filepath)
-  queue.add(() => addFileToQueue(filepath, {force: true}))
+  addFileToQueue(filepath, {force: true})
 })
 watcher.on('add', filepath => {
   debug('add', filepath)
-  queue.add(() => addFileToQueue(filepath, {force: isReady}))
+  addFileToQueue(filepath, {force: isReady})
 })
 watcher.on('ready', () => {
   debug('ready')
@@ -50,7 +44,6 @@ function addFileToQueue(filepath, {force} = {}) {
   }
 
   queue.add(async () => {
-    console.log('beginning', filepath)
     const {baseFilename, destDir} = await getInfoFromImage(filepath, {
       root: BMC_THUMBNAILS_DIR,
     })
@@ -65,7 +58,6 @@ function addFileToQueue(filepath, {force} = {}) {
 
     for (const futurePromise of gen) {
       queue.add(futurePromise)
-      console.log(`queue size: ${queue.pending}`)
     }
   })
 }
