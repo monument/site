@@ -44,6 +44,7 @@ function addFileToQueue(filepath, {force} = {}) {
   }
 
   queue.add(async () => {
+    console.log('beginning', filepath)
     const {baseFilename, destDir} = await getInfoFromImage(filepath, {
       root: BMC_THUMBNAILS_DIR,
     })
@@ -58,6 +59,7 @@ function addFileToQueue(filepath, {force} = {}) {
 
     for (const futurePromise of gen) {
       queue.add(futurePromise)
+      console.log(`queue size: ${queue.pending}`)
     }
   })
 }
