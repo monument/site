@@ -37,25 +37,27 @@ watcher.on('ready', () => {
   isReady = true
 })
 
-async function addFileToQueue(filepath, {force} = {}) {
+function addFileToQueue(filepath, {force} = {}) {
   // only add jpegs to the queue
   if (!isJpeg(filepath)) {
     return
   }
 
-  const {baseFilename, destDir} = await getInfoFromImage(filepath, {
-    root: BMC_THUMBNAILS_DIR,
-  })
+  queue.add(async () => {
+    const {baseFilename, destDir} = await getInfoFromImage(filepath, {
+      root: BMC_THUMBNAILS_DIR,
+    })
 
-  // generateThumbnailsFor is a generator that
-  // returns functions which return promises
-  const gen = generateThumbnailsFor(filepath, {
-    intoDir: destDir,
-    basename: baseFilename,
-    force: force,
-  })
+    // generateThumbnailsFor is a generator that
+    // returns functions which return promises
+    const gen = generateThumbnailsFor(filepath, {
+      intoDir: destDir,
+      basename: baseFilename,
+      force: force,
+    })
 
-  for (const futurePromise of gen) {
-    queue.add(futurePromise)
-  }
+    for (const futurePromise of gen) {
+      queue.add(futurePromise)
+    }
+  })
 }
