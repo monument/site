@@ -39,8 +39,6 @@ watcher.on('add', filepath => addFileToQueue(filepath, 'add'))
 watcher.on('change', filepath => addFileToQueue(filepath, 'change'))
 watcher.on('unlink', filepath => addFileToQueue(filepath, 'unlink'))
 
-setInterval(() => console.log(process.memoryUsage()), 1000)
-
 async function addFileToQueue(filepath, mode) {
   debug(mode, filepath)
 
@@ -58,8 +56,6 @@ async function addFileToQueue(filepath, mode) {
       photosBase: BMC_PHOTOS_DIR,
       metadataBase: BMC_METADATA_DIR,
     })
-
-    // console.log('data', data.title)
 
     if (mode === 'add') {
       db.set(data.id, data)
