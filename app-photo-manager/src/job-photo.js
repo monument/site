@@ -7,7 +7,7 @@ const base = 'http://localhost:3001'
 export default class JobPhoto extends React.PureComponent {
   render() {
     const {
-      component=Image,
+      component = Image,
       year,
       title,
       size = '400x400',

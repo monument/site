@@ -86,7 +86,13 @@ class SearchBox extends React.PureComponent {
   };
 
   render() {
-    return <SearchInput placeholder="Search" onChange={this.onChange} value={this.props.text} />
+    return (
+      <SearchInput
+        placeholder="Search"
+        onChange={this.onChange}
+        value={this.props.text}
+      />
+    )
   }
 }
 
