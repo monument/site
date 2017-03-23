@@ -36,20 +36,18 @@ watcher.on('ready', () => {
   debug('ready')
 })
 
-async function addFileToQueue(filepath) {
+function addFileToQueue(filepath) {
   // only add jpegs to the queue
   if (!isJpeg(filepath)) {
     return
   }
 
-  const {
-    destDir,
-    filename,
-  } = await getInfoFromImage(filepath, {
-    root: BMC_PHOTOS_DIR,
+  queue.add(async () => {
+    const {destDir, filename} = await getInfoFromImage(filepath, {
+      root: BMC_PHOTOS_DIR,
+    })
+
+    const destFile = path.join(destDir, filename)
+    return moveFile(filepath, destFile)
   })
-
-  const destFile = path.join(destDir, filename)
-
-  queue.add(() => moveFile(filepath, destFile))
 }
