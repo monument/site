@@ -39,7 +39,7 @@ watcher.on('add', filepath => addFileToQueue(filepath, 'add'))
 watcher.on('change', filepath => addFileToQueue(filepath, 'change'))
 watcher.on('unlink', filepath => addFileToQueue(filepath, 'unlink'))
 
-async function addFileToQueue(filepath, mode) {
+function addFileToQueue(filepath, mode) {
   debug(mode, filepath)
 
   // only add jpegs to the queue
@@ -65,9 +65,7 @@ async function addFileToQueue(filepath, mode) {
       db.remove(data.id)
     }
 
-    return Promise.all([
-      writeJobMetadata(jobYear, jobName, data, {base: BMC_METADATA_DIR}),
-      writeDatabase(db, BMC_DATABASE_FILE),
-    ])
+    queue.add(() => writeJobMetadata(jobYear, jobName, data, {base: BMC_METADATA_DIR}))
+    queue.add(() => writeDatabase(db, BMC_DATABASE_FILE))
   })
 }
