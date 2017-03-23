@@ -16,7 +16,7 @@ const {
   BMC_THUMBNAILS_DIR,
 } = checkEnvVars('BMC_PHOTOS_DIR', 'BMC_THUMBNAILS_DIR')
 
-const queue = new PQueue({concurrency: 4})
+const queue = new PQueue({concurrency: 1})
 
 const BASE = BMC_PHOTOS_DIR
 const PATTERN = '**/*'
